@@ -1,0 +1,9 @@
+.histyle {
+    background-color: rgb(206, 184, 208);
+    width: 150px;
+    height: 150px;
+    color: black;
+    margin-left: 10em;
+    margin-top: 10em;
+    z-index: 5;
+}
