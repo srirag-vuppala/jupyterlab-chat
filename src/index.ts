@@ -3,11 +3,14 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-import { CodeEditor, CodeEditorWrapper } from '@jupyterlab/codeeditor';
+import { CodeEditor } from '@jupyterlab/codeeditor';
+import { CodeMirrorEditor } from '@jupyterlab/codemirror';
 
-import {InputArea} from '@jupyterlab/cells' 
+// import {InputArea} from '@jupyterlab/cells' 
 
-import { UUID } from '@lumino/coreutils';
+// import { UUID } from '@lumino/coreutils';
+
+// import { Widget } from '@lumino/widgets';
 
 import '../style/editor.css'
 
@@ -22,18 +25,22 @@ const plugin: JupyterFrontEndPlugin<void> = {
   activate: (app: JupyterFrontEnd) => {
     let options = {
       // uuid: UUID.uuid4(),
-      uuid: "579ba423-a705-41e1-92bd-d525c3a7f422", 
-      factory: InputArea.defaultContentFactory.editorFactory,
+      // uuid: "579ba423-a705-41e1-92bd-d525c3a7f422", 
+      // factory: InputArea.defaultContentFactory.editorFactory,
+      // factory: CodeMirrorEditorFactory,
+      host: document.body,
       model: new CodeEditor.Model,
     }
-    let editorWrapper = new CodeEditorWrapper(options);
+    let editorM= new CodeMirrorEditor(options);
 
-    editorWrapper.addClass("histyle");
-    console.log(editorWrapper.node)
-    document.body.appendChild(editorWrapper.node);
-    editorWrapper.show();
+    // editorM.addClass("histyle");
+    console.log("the code mirror editor ob");
+    console.log(editorM)
+    // console.log(editorM.getLine(3))
+    document.body.appendChild(editorM.host);
+    // editorWrapper.show();
 
-    console.log(editorWrapper.editor.model.modelDB.isCollaborative);
+    // console.log(editorWrapper.editor.model.modelDB.isCollaborative);
 
     console.log('JupyterLab extension jupyterlab-chat is activated!');
   }
