@@ -50,6 +50,7 @@
     "@jupyterlab/application": "^3.1.0-alpha.13",
     "@jupyterlab/cells": "^3.1.0-alpha.13",
     "@jupyterlab/codeeditor": "3.1.0-alpha.13",
+    "@jupyterlab/docregistry": "^3.0.11",
     "@jupyterlab/notebook": "^3.0.11",
     "@jupyterlab/shared-models": "^3.1.0-alpha.13",
     "yjs": "^13.5.10"

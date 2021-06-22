@@ -3,15 +3,13 @@ import {
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
 
-import { InputDialog } from '@jupyterlab/apputils';
 
-import { INotebookTracker } from '@jupyterlab/notebook';
+// import { DocumentRegistry } from '@jupyterlab/docregistry';
 
-namespace CommandIDs {
-  export const addComment = 'jl-chat:add-comment';
+import { ABCWidgetFactory } from '@jupyterlab/docregistry';
+import { TextfileModel } from './TextfileModel'
 
-  export const renderComment = 'jl-chat:render-comment';
-}
+class TextfileFactory extends ABCWidgetFactory<TextfileModel
 
 /**
  * Initialization data for the jupyterlab-chat extension.
@@ -19,53 +17,22 @@ namespace CommandIDs {
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-chat:plugin',
   autoStart: true,
-  requires: [INotebookTracker],
-  activate: (app: JupyterFrontEnd, nbTracker: INotebookTracker) => {
-    app.commands.addCommand(CommandIDs.addComment, {
-      label: 'Add Comment',
-      execute: async () => {
-        const cell = nbTracker.currentWidget?.content.activeCell;
-        if (cell == null) {
-          return;
-        }
+  requires: [],
+  activate: (app: JupyterFrontEnd) => {
 
-        void InputDialog.getText({
-          title: 'Enter Comment'
-        }).then(value => {
-          if (value.value != null) {
-            cell.model.metadata.set('comment', value.value);
-            console.log('set metadata of cell', cell.model.id);
-          }
-        });
-      }
-    });
 
-    app.commands.addCommand(CommandIDs.renderComment, {
-      label: 'Render Comment',
-      execute: () => {
-        const cell = nbTracker.currentWidget?.content.activeCell;
-        if (cell == null) {
-          return;
-        }
 
-        const comment = cell.model.metadata.get('comment');
-        if (comment != null) {
-          alert(comment);
-        }
-      }
-    });
 
-    app.contextMenu.addItem({
-      command: CommandIDs.addComment,
-      selector: '.jp-Notebook .jp-Cell',
-      rank: 13
-    });
+    console.log("hi");
+    app.docRegistry.addFileType({
+      name: 'comment',
+      displayName: 'Comment',
+      mimeTypes: ['text/json', 'application/json'],
+      extensions: ['.comment'],
+      fileFormat: 'json',
+      contentType: 'file',
+    })
 
-    app.contextMenu.addItem({
-      command: CommandIDs.renderComment,
-      selector: '.jp-Notebook .jp-Cell',
-      rank: 14
-    });
   }
 };
 
