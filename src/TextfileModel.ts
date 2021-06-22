@@ -37,7 +37,7 @@ export class TextfileModel implements DocumentRegistry.IModel {
 
     // Listening for changes on the shared model to propagate them
     // this.sharedModel.changed.connect(this._onSharedModelChanged);
-    // this.sharedModel.awareness.on('change', this._onClientChanged);
+    this.sharedModel.awareness.on('change', this._onClientChanged);
     this.sharedModel.changed.connect(this._onSharedModelChanged);
     // this.sharedModel.awareness.on('change', CommentfileModel);
   }

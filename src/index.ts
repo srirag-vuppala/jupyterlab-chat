@@ -6,10 +6,25 @@ import {
 
 // import { DocumentRegistry } from '@jupyterlab/docregistry';
 
-import { ABCWidgetFactory } from '@jupyterlab/docregistry';
+import { ABCWidgetFactory, DocumentRegistry, DocumentWidget} from '@jupyterlab/docregistry';
 import { TextfileModel } from './TextfileModel'
 
-class TextfileFactory extends ABCWidgetFactory<TextfileModel
+class TextfileFactory extends ABCWidgetFactory<DocumentWidget, TextfileModel> {
+  constructor(options: DocumentRegistry.IWidgetExtensionOptions){
+    super(options);
+  }
+
+  protected createNewWidget (
+    context: DocumentRegistry.IContext<TextfileModel>
+  ): DocumentWidget {
+    return new DocumentWidget({
+      context, 
+      content: new 
+    })
+  }
+
+
+}
 
 /**
  * Initialization data for the jupyterlab-chat extension.
