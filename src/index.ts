@@ -6,25 +6,26 @@ import {
 
 // import { DocumentRegistry } from '@jupyterlab/docregistry';
 
-import { ABCWidgetFactory, DocumentRegistry, DocumentWidget} from '@jupyterlab/docregistry';
-import { TextfileModel } from './TextfileModel'
-
-class TextfileFactory extends ABCWidgetFactory<DocumentWidget, TextfileModel> {
-  constructor(options: DocumentRegistry.IWidgetExtensionOptions){
-    super(options);
-  }
-
-  protected createNewWidget (
-    context: DocumentRegistry.IContext<TextfileModel>
-  ): DocumentWidget {
-    return new DocumentWidget({
-      context, 
-      content: new 
-    })
-  }
+// import { ABCWidgetFactory, DocumentRegistry, DocumentWidget} from '@jupyterlab/docregistry';
+// import { TextfileModel } from './TextfileModel'
+import { TextfileModelFactory } from './factory';
 
 
-}
+// class TextfileWidgetFactory extends ABCWidgetFactory<DocumentWidget, TextfileModel> {
+//   constructor(options: DocumentRegistry.IWidgetFactoryOptions){
+//     super(options);
+//   }
+//   // I apparently need this to use ABCwidget
+//   // protected createNewWidget (
+//   //   context: DocumentRegistry.IContext<TextfileModel>
+//   // ): DocumentWidget {
+//   //   return new DocumentWidget({
+//   //     context, 
+//   //     content: new a;lsdjf;lakd
+//   //   })
+//   // }
+// }
+
 
 /**
  * Initialization data for the jupyterlab-chat extension.
@@ -32,11 +33,17 @@ class TextfileFactory extends ABCWidgetFactory<DocumentWidget, TextfileModel> {
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-chat:plugin',
   autoStart: true,
-  requires: [],
   activate: (app: JupyterFrontEnd) => {
 
+    // const widgetFactory = new TextfileWidgetFactory({
+    //   name: 'Textfile editorrrrr',
+    //   modelName: 'textfile-model',
+    //   fileTypes: ['comment'],
+    //   defaultFor: ['comment']
+    // })
 
-
+    const modelFactory = new TextfileModelFactory();
+    app.docRegistry.addModelFactory(modelFactory);
 
     console.log("hi");
     app.docRegistry.addFileType({
@@ -44,7 +51,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       displayName: 'Comment',
       mimeTypes: ['text/json', 'application/json'],
       extensions: ['.comment'],
-      fileFormat: 'json',
+      fileFormat: 'text',
       contentType: 'file',
     })
 

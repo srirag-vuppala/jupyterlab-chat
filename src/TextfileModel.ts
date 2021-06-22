@@ -11,7 +11,7 @@ import { PartialJSONObject } from '@lumino/coreutils';
 import { ISignal, Signal } from '@lumino/signaling';
 
 import * as Y from 'yjs';
-import { CommentfileModel } from './CommentfileModel';
+// import { CommentfileModel } from './CommentfileModel';
 
 export type SharedObject = {
   x: number;
@@ -19,132 +19,60 @@ export type SharedObject = {
   content: string;
 };
 
-export type Position = {
-  x: number;
-  y: number;
-};
+// export type Position = {
+//   x: number;
+//   y: number;
+// };
 
-/**
- * DocumentModel: this Model represents the content of the file
- */
 export class TextfileModel implements DocumentRegistry.IModel {
-  /**
-   * @param languagePreference
-   * @param modelDB
-   */
+
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
 
     // Listening for changes on the shared model to propagate them
-    // this.sharedModel.changed.connect(this._onSharedModelChanged);
     this.sharedModel.awareness.on('change', this._onClientChanged);
     this.sharedModel.changed.connect(this._onSharedModelChanged);
-    // this.sharedModel.awareness.on('change', CommentfileModel);
   }
 
-  /**
-   * get/set the dirty attribute to know when the
-   * content in the document differs from disk
-   */
   get dirty(): boolean {
     return this._dirty;
   }
   set dirty(value: boolean) {
     this._dirty = value;
   }
-
-  /**
-   * get/set the editing attribute to know when the
-   * client is editing shared objects and not apply the
-   * changes twice.
-   */
   get editing(): boolean {
     return this._editing;
   }
   set editing(value: boolean) {
     this._editing = value;
   }
-
-  /**
-   * get/set the readOnly attribute to know whether this model
-   * is read only or not
-   */
   get readOnly(): boolean {
     return this._readOnly;
   }
   set readOnly(value: boolean) {
     this._readOnly = value;
   }
-
-  /**
-   * get the isDisposed attribute to know whether this model
-   * has been disposed or not
-   */
   get isDisposed(): boolean {
     return this._isDisposed;
   }
-
-  /**
-   * get the signal contentChange to listen for changes on the content
-   * of the model.
-   *
-   * NOTE: The content refers to de data stored in the model while the state refers
-   * to the metadata or attributes of the model.
-   */
   get contentChanged(): ISignal<this, void> {
     return this._contentChanged;
   }
-
-  /**
-   * get the signal stateChanged to listen for changes on the state
-   * of the model.
-   *
-   * NOTE: The content refers to de data stored in the model while the state refers
-   * to the metadata or attributes of the model.
-   */
   get stateChanged(): ISignal<this, IChangedArgs<any, any, string>> {
     return this._stateChanged;
   }
-
-  /**
-   * get the signal sharedModelChanged to listen for changes on the content
-   * of the shared model.
-   */
   get sharedModelChanged(): ISignal<this, TextfileChange> {
     return this._sharedModelChanged;
   }
-
-  /**
-   * get the signal clientChanged to listen for changes on the clients sharing
-   * the same document.
-   */
   get clientChanged(): ISignal<this, Map<number, any>> {
     return this._clientChanged;
   }
 
-  /**
-   * defaultKernelName and defaultKernelLanguage are only used by the Notebook widget
-   * or documents that use kernels, and they store the name and the language of the kernel.
-   */
   readonly defaultKernelName: string ='' ;
   readonly defaultKernelLanguage: string ='';
-
-  /**
-   * modelBD is the datastore for the content of the document.
-   * modelDB is not a shared datastore so we don't use it on this example since
-   * this example is a shared document.
-   */
   readonly modelDB: IModelDB;
-
-  /**
-   * New datastore introduced in JupyterLab v3.1 to store shared data and make notebooks
-   * collaborative
-   */
   readonly sharedModel: Textfile = Textfile.create();
 
-  /**
-   * Dispose of the resources held by the model.
-   */
   dispose(): void {
     if (this._isDisposed) {
       return;
@@ -153,11 +81,6 @@ export class TextfileModel implements DocumentRegistry.IModel {
     Signal.clearData(this);
   }
 
-  /**
-   * Should return the data that you need to store in disk as a string.
-   * The context will call this method to get the file's content and save it
-   * to disk
-   */
   toString(): string {
     const pos = this.sharedModel.getContent('position');
     const obj = {
@@ -231,18 +154,18 @@ export class TextfileModel implements DocumentRegistry.IModel {
     return obj;
   }
 
-  setPosition(pos: Position): void {
-    this.sharedModel.setContent('position', pos);
-  }
+  // setPosition(pos: Position): void {
+  //   this.sharedModel.setContent('position', pos);
+  // }
 
   setContent(content: string): void {
     this.sharedModel.setContent('content', content);
   }
 
-  setClient(pos: Position): void {
-    // Adds the position of the mouse from the client to the shared state.
-    this.sharedModel.awareness.setLocalStateField('mouse', pos);
-  }
+  // setClient(pos: Position): void {
+  //   // Adds the position of the mouse from the client to the shared state.
+  //   this.sharedModel.awareness.setLocalStateField('mouse', pos);
+  // }
 
   /**
    * Callback to listen for changes on the sharedModel. This callback listens
@@ -298,7 +221,7 @@ export class TextfileModel implements DocumentRegistry.IModel {
 export type TextfileChange = {
   contextChange?: MapChange;
   contentChange?: string;
-  positionChange?: Position;
+  // positionChange?: Position;
 };
 
 /**
@@ -354,9 +277,9 @@ export class Textfile extends YDocument<TextfileChange> {
     const changes: TextfileChange = {};
 
     // Checks which object changed and propagates them.
-    if (event.keysChanged.has('position')) {
-      changes.positionChange = this._content.get('position');
-    }
+    // if (event.keysChanged.has('position')) {
+    //   changes.positionChange = this._content.get('position');
+    // }
 
     if (event.keysChanged.has('content')) {
       changes.contentChange = this._content.get('content');

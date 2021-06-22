@@ -1046,6 +1046,22 @@
     "@lumino/widgets" "^1.19.0"
     react "^17.0.1"
 
+"@jupyterlab/fileeditor@^3.0.11":
+  version "3.0.11"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/fileeditor/-/fileeditor-3.0.11.tgz#38b0818647c86cd3c3cafd4ad4a64732db4f5335"
+  integrity sha512-ZzyVjPPdgDLlE4NGU9ERKwkDN21NDr0Phvu/mN12bKjN9bfE2Z9sLzLVXu+relFCtg4B9InkmP/WbZBAN9zMVQ==
+  dependencies:
+    "@jupyterlab/apputils" "^3.0.9"
+    "@jupyterlab/codeeditor" "^3.0.9"
+    "@jupyterlab/docregistry" "^3.0.11"
+    "@jupyterlab/statusbar" "^3.0.9"
+    "@jupyterlab/translation" "^3.0.9"
+    "@jupyterlab/ui-components" "^3.0.7"
+    "@lumino/coreutils" "^1.5.3"
+    "@lumino/messaging" "^1.4.3"
+    "@lumino/widgets" "^1.16.1"
+    react "^17.0.1"
+
 "@jupyterlab/nbformat@^3.0.6":
   version "3.0.6"
   resolved "https://registry.yarnpkg.com/@jupyterlab/nbformat/-/nbformat-3.0.6.tgz#858a6567cdd60879bc7f9dad6c9dcb5587417b5d"
@@ -1053,7 +1069,7 @@
   dependencies:
     "@lumino/coreutils" "^1.5.3"
 
-"@jupyterlab/nbformat@^3.1.0-alpha.13":
+"@jupyterlab/nbformat@^3.1.0-alpha.13", "@jupyterlab/nbformat@^3.1.0-alpha.7":
   version "3.1.0-alpha.13"
   resolved "https://registry.yarnpkg.com/@jupyterlab/nbformat/-/nbformat-3.1.0-alpha.13.tgz#391302bc6b0140384a2089ee610f40b5740e911a"
   integrity sha512-+bUfxrbTQ/XchQYbx9M0IU59+lxFuNasLCqVq5JGKi01WtNQ17D6JBtvoA1hXAroA/xgtCeFQ8CVo/ccArWcpQ==
@@ -1283,6 +1299,18 @@
     "@lumino/signaling" "^1.4.3"
     y-protocols "^1.0.5"
     yjs "^13.5.6"
+
+"@jupyterlab/shared-models@^3.1.0-alpha.7":
+  version "3.1.0-alpha.7"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/shared-models/-/shared-models-3.1.0-alpha.7.tgz#43fb5bc046065d26e5c39071678ceacf2617d262"
+  integrity sha512-OnAIVd+qRs6AcwEdZpF06lHKiCCKLPA57H/BsEsbeYxRhKoV5NrvqTarZsRjEtCyb4tQL6ne9HOm9/EWluB59Q==
+  dependencies:
+    "@jupyterlab/nbformat" "^3.1.0-alpha.7"
+    "@lumino/coreutils" "^1.5.3"
+    "@lumino/disposable" "^1.4.3"
+    "@lumino/signaling" "^1.4.3"
+    y-protocols "^1.0.4"
+    yjs "^13.5.3"
 
 "@jupyterlab/statedb@^3.0.6":
   version "3.0.6"
@@ -6615,7 +6643,7 @@ y-leveldb@^0.1.0:
     level "^6.0.1"
     lib0 "^0.2.31"
 
-y-protocols@^1.0.5:
+y-protocols@^1.0.4, y-protocols@^1.0.5:
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/y-protocols/-/y-protocols-1.0.5.tgz#91d574250060b29fcac8f8eb5e276fbad594245e"
   integrity sha512-Wil92b7cGk712lRHDqS4T90IczF6RkcvCwAD0A2OPg+adKmOe+nOiT/N2hvpQIWS3zfjmtL4CPaH5sIW1Hkm/A==
@@ -6667,7 +6695,7 @@ yargs@^16.0.3:
     y18n "^5.0.5"
     yargs-parser "^20.2.2"
 
-yjs@^13.5.10, yjs@^13.5.6:
+yjs@^13.5.10, yjs@^13.5.3, yjs@^13.5.6:
   version "13.5.10"
   resolved "https://registry.yarnpkg.com/yjs/-/yjs-13.5.10.tgz#7c7ed618b5429c3cef29ec8a30b810b962cb908f"
   integrity sha512-RFCYvU/KA2lEOP6dJjmBKpTRLC/McULI26SDfH5b5bPK+jgOjkpWh8oNWNWxnuK7PaCJQPf1l+RosfsRnI1pQA==
