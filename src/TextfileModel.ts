@@ -12,18 +12,23 @@ import { ISignal, Signal } from '@lumino/signaling';
 
 import * as Y from 'yjs';
 
-export type CommentfileSharedObject = {
+//TODO
+// import { CommentfilePosition, CommentfileSharedObject } from './CommentfileModel';
+
+
+
+export type TextfileSharedObject = {
   x: number;
   y: number;
   content: string;
 };
 
-export type CommentfilePosition = {
+export type TextfilePosition = {
   x: number;
   y: number;
 };
 
-export class CommentfileModel implements DocumentRegistry.IModel {
+export class TextfileModel implements DocumentRegistry.IModel {
 
   constructor(languagePreference?: string, modelDB?: IModelDB) {
     this.modelDB = modelDB || new ModelDB();
@@ -60,7 +65,7 @@ export class CommentfileModel implements DocumentRegistry.IModel {
   get stateChanged(): ISignal<this, IChangedArgs<any, any, string>> {
     return this._stateChanged;
   }
-  get sharedModelChanged(): ISignal<this, CommentfileChange> {
+  get sharedModelChanged(): ISignal<this, TextfileChange> {
     return this._sharedModelChanged;
   }
   get clientChanged(): ISignal<this, Map<number, any>> {
@@ -70,7 +75,7 @@ export class CommentfileModel implements DocumentRegistry.IModel {
   readonly defaultKernelName: string ='' ;
   readonly defaultKernelLanguage: string ='';
   readonly modelDB: IModelDB;
-  readonly sharedModel: Commentfile = Commentfile.create();
+  readonly sharedModel: Textfile = Textfile.create();
 
   dispose(): void {
     if (this._isDisposed) {
@@ -142,7 +147,7 @@ export class CommentfileModel implements DocumentRegistry.IModel {
   initialize(): void {
     // not implemented
   }
-  getSharedObject(): CommentfileSharedObject {
+  getSharedObject(): TextfileSharedObject {
     const pos = this.sharedModel.getContent('position');
     const obj = {
       x: pos?.x || 10,
@@ -151,13 +156,13 @@ export class CommentfileModel implements DocumentRegistry.IModel {
     };
     return obj;
   }
-  setPosition(pos: CommentfilePosition): void {
+  setPosition(pos: TextfilePosition): void {
     this.sharedModel.setContent('position', pos);
   }
   setContent(content: string): void {
     this.sharedModel.setContent('content', content);
   }
-  setClient(pos: CommentfilePosition): void {
+  setClient(pos: TextfilePosition): void {
     // Adds the position of the mouse from the client to the shared state.
     this.sharedModel.awareness.setLocalStateField('mouse', pos);
   }
@@ -171,8 +176,8 @@ export class CommentfileModel implements DocumentRegistry.IModel {
    * @param change: The changes on the sharedModel.
    */
   private _onSharedModelChanged = (
-    sender: Commentfile,
-    changes: CommentfileChange 
+    sender: Textfile,
+    changes: TextfileChange 
   ): void => {
     this._sharedModelChanged.emit(changes);
   };
@@ -198,7 +203,7 @@ export class CommentfileModel implements DocumentRegistry.IModel {
   private _contentChanged = new Signal<this, void>(this);
   private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
   private _clientChanged = new Signal<this, Map<number, any>>(this);
-  private _sharedModelChanged = new Signal<this, CommentfileChange>(this);
+  private _sharedModelChanged = new Signal<this, TextfileChange>(this);
 }
 
 /**
@@ -213,16 +218,16 @@ export class CommentfileModel implements DocumentRegistry.IModel {
  * This type represents the different changes that may happen and ready to use
  * for the widget.
  */
-export type CommentfileChange = {
+export type TextfileChange = {
   contextChange?: MapChange;
   contentChange?: string;
-  positionChange?: CommentfilePosition;
+  positionChange?: TextfilePosition;
 };
 
 /**
  * SharedModel, stores and shares the content between clients.
  */
-export class Commentfile extends YDocument<CommentfileChange> {
+export class Textfile extends YDocument<TextfileChange> {
   constructor() {
     super();
     // Creating a new shared object and listen to its changes
@@ -241,8 +246,8 @@ export class Commentfile extends YDocument<CommentfileChange> {
   /**
    * Static method to create instances on the sharedModel
    */
-  public static create(): Commentfile{
-    return new Commentfile();
+  public static create(): Textfile{
+    return new Textfile();
   }
 
   /**
@@ -271,7 +276,7 @@ export class Commentfile extends YDocument<CommentfileChange> {
    * @param event
    */
   private _contentObserver = (event: Y.YMapEvent<any>): void => {
-    const changes: CommentfileChange= {};
+    const changes: TextfileChange= {};
 
     // Checks which object changed and propagates them.
     if (event.keysChanged.has('position')) {
