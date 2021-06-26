@@ -2,6 +2,10 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+// import { CodeEditor, Factory, IEditorServices } from '@jupyterlab/codeeditor';
+// import { CodeMirrorEditorFactory } from '@jupyterlab/codemirror';
+// import { DocumentRegistry } from '@jupyterlab/docregistry';
+// import { FileEditor, FileEditorFactory } from '@jupyterlab/fileeditor';
 // import { IWidgetTracker } from '@jupyterlab/apputils';
 // import { Token } from '@lumino/coreutils'
 
@@ -9,7 +13,7 @@ import {
 
 
 import { CommentfileModelFactory, CommentfileWidgetFactory, TextfileModelFactory, TextfileWidgetFactory } from './factory';
-// import {  TextfileModelFactory, TextfileWidgetFactory } from './factory';
+// import {  CommentfileModelFactory, CommentfileWidgetFactory } from './factory';
 
 // export const ICommentfileTracker = new Token<IWidgetTracker<CommentfileWidget>>(
 //   'commentfiletracker'
@@ -42,6 +46,7 @@ const plugin: JupyterFrontEndPlugin<void> = {
       modelName: 'textfile-model',
       fileTypes: ['text']
     })
+
     app.docRegistry.addWidgetFactory(widgetFactory2);
 
     // widgetFactory.widgetCreated.connect((sender, widget) => {
@@ -66,19 +71,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
       fileFormat: 'text',
       contentType: 'file',
     })
-
-    // app.docRegistry.addFileType({
-    //   name: 'textfile',
-    //   displayName: 'textfile',
-    //   mimeTypes: ['text/json', 'application/json'],
-    //   extensions: ['.txt'],
-    //   fileFormat: 'text',
-    //   contentType: 'file',
-    // })
-    // app.docRegistry.setDefaultWidgetFactory('txt', 'modelFactory');
-
-    console.log(app.docRegistry.getFileTypesForPath("../test.txt"))
-
   }
 };
 

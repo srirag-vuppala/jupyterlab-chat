@@ -634,14 +634,14 @@
     "@lumino/disposable" "^1.4.3"
     "@lumino/signaling" "^1.4.3"
 
-"@jupyterlab/builder@^3.0.0":
-  version "3.0.9"
-  resolved "https://registry.yarnpkg.com/@jupyterlab/builder/-/builder-3.0.9.tgz#60b184accd63afced196d2369c886f6fe238acc4"
-  integrity sha512-IjWHk/xTgufTyggbT/0tGFeRdsHe3rNMQkOMqDN5+8YqFV4uCTUNokgvyysedgwB7JP+tcPclN/a3QoIPjAq/w==
+"@jupyterlab/builder@^3.1.0-alpha.13":
+  version "3.1.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/builder/-/builder-3.1.0-alpha.13.tgz#06c8c68df1d75be80021ce1780382dad92e53a5d"
+  integrity sha512-CYs8/Y+82sUGATuX1aTCNQZwfOydHeKWRJNq1VZWUGx8/LpkbMKb7BkaLNpxIsrlteGZmhkSxuODEbCP2FpfeQ==
   dependencies:
-    "@jupyterlab/buildutils" "^3.0.7"
+    "@jupyterlab/buildutils" "^3.1.0-alpha.13"
     "@lumino/algorithm" "^1.3.3"
-    "@lumino/application" "^1.13.1"
+    "@lumino/application" "^1.16.0"
     "@lumino/commands" "^1.12.0"
     "@lumino/coreutils" "^1.5.3"
     "@lumino/disposable" "^1.4.3"
@@ -651,7 +651,7 @@
     "@lumino/properties" "^1.2.3"
     "@lumino/signaling" "^1.4.3"
     "@lumino/virtualdom" "^1.8.0"
-    "@lumino/widgets" "^1.16.1"
+    "@lumino/widgets" "^1.19.0"
     ajv "^6.12.3"
     commander "~6.0.0"
     css-loader "^5.0.1"
@@ -659,6 +659,7 @@
     file-loader "~6.0.0"
     fs-extra "^9.0.1"
     glob "~7.1.6"
+    license-webpack-plugin "^2.3.14"
     mini-css-extract-plugin "~1.3.2"
     path-browserify "^1.0.0"
     process "^0.11.10"
@@ -674,10 +675,10 @@
     webpack-merge "^5.1.2"
     worker-loader "^3.0.2"
 
-"@jupyterlab/buildutils@^3.0.7":
-  version "3.0.7"
-  resolved "https://registry.yarnpkg.com/@jupyterlab/buildutils/-/buildutils-3.0.7.tgz#e83d3303b5f2bddd0b6b39fdab81864b67574dec"
-  integrity sha512-V3A9foBIP9CJcblyZTEKHtkY6o/3pRodxNAZqveiDDpBdQhM8xv4uOLBKkkMxroa5Eh5Goub4fw+JHxI2nKGXw==
+"@jupyterlab/buildutils@^3.1.0-alpha.13":
+  version "3.1.0-alpha.13"
+  resolved "https://registry.yarnpkg.com/@jupyterlab/buildutils/-/buildutils-3.1.0-alpha.13.tgz#87df12eb2c17a90fdafd04b0cacf850b17a235a4"
+  integrity sha512-eCB6bAMseiM39HizDWA8J/xX6Mpz2gmtmdRMiV07Pt9g/bb0JoBQoTh8MUtKKyLEEUYJSrtV1MqU63+CgxTMYQ==
   dependencies:
     "@lumino/coreutils" "^1.5.3"
     "@yarnpkg/lockfile" "^1.1.0"
@@ -688,6 +689,7 @@
     fs-extra "^9.0.1"
     glob "~7.1.6"
     inquirer "^7.0.0"
+    minimatch "~3.0.4"
     package-json "^6.5.0"
     prettier "^2.1.1"
     semver "^7.3.2"
@@ -1090,7 +1092,7 @@
   resolved "https://registry.yarnpkg.com/@lumino/algorithm/-/algorithm-1.6.0.tgz#771e7896cd94e660f9b58a52f80e1bb255de1d41"
   integrity sha512-NMOcm5Yr9nXz5gokS/K4jHBbUMQYBkvDXl1n51XWdcz0LY+oGuIKPhjazhUgmbNRehzdZBj5hMMd1+htYWeVKQ==
 
-"@lumino/application@^1.13.1", "@lumino/application@^1.16.0":
+"@lumino/application@^1.16.0":
   version "1.20.0"
   resolved "https://registry.yarnpkg.com/@lumino/application/-/application-1.20.0.tgz#b50ca4180bc400589fdfcfcaab08c4af937fccd0"
   integrity sha512-FAoQcq4L3ZswTK0lWfLKnG1ecG26cwqjzg2fyoBeuWGBi1TG9BYjFBdV7ErTFMxW8jE1CLOLuxsZaKFLNErcKA==
@@ -1186,7 +1188,7 @@
   dependencies:
     "@lumino/algorithm" "^1.6.0"
 
-"@lumino/widgets@^1.16.1", "@lumino/widgets@^1.19.0", "@lumino/widgets@^1.23.0":
+"@lumino/widgets@^1.19.0", "@lumino/widgets@^1.23.0":
   version "1.23.0"
   resolved "https://registry.yarnpkg.com/@lumino/widgets/-/widgets-1.23.0.tgz#096c7574de75fa67b32bcb914c5dae290fbee6f3"
   integrity sha512-0Akt9ESgc06SJ3EJG3VK1Liw+AAjRWkKMfm8VUTwT/1QJYYGZ8kfHNO97mkBLv+0EkLEkZIeaQb8fIoU6vh7bw==
@@ -1405,10 +1407,24 @@
   resolved "https://registry.yarnpkg.com/@types/scheduler/-/scheduler-0.16.1.tgz#18845205e86ff0038517aab7a18a62a6b9f71275"
   integrity sha512-EaCxbanVeyxDRTQBkdLb3Bvl/HK7PBK6UJjsSixB0iHKoWxE5uu2Q/DgtpOhPIojN0Zl1whvOd7PoHs2P0s5eA==
 
+"@types/source-list-map@*":
+  version "0.1.2"
+  resolved "https://registry.yarnpkg.com/@types/source-list-map/-/source-list-map-0.1.2.tgz#0078836063ffaf17412349bba364087e0ac02ec9"
+  integrity sha512-K5K+yml8LTo9bWJI/rECfIPrGgxdpeNbj+d53lwN4QjW1MCwlkhUms+gtdzigTeUyBr09+u8BwOIY3MXvHdcsA==
+
 "@types/stack-utils@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@types/stack-utils/-/stack-utils-2.0.0.tgz#7036640b4e21cc2f259ae826ce843d277dad8cff"
   integrity sha512-RJJrrySY7A8havqpGObOB4W92QXKJo63/jFLLgpvOtsGUqbQZ9Sbgl35KMm1DjC6j7AvmmU2bIno+3IyEaemaw==
+
+"@types/webpack-sources@^0.1.5":
+  version "0.1.8"
+  resolved "https://registry.yarnpkg.com/@types/webpack-sources/-/webpack-sources-0.1.8.tgz#078d75410435993ec8a0a2855e88706f3f751f81"
+  integrity sha512-JHB2/xZlXOjzjBB6fMOpH1eQAfsrpqVVIbneE0Rok16WXwFaznaI5vfg75U5WgGJm7V9W1c4xeRQDjX/zwvghA==
+  dependencies:
+    "@types/node" "*"
+    "@types/source-list-map" "*"
+    source-map "^0.6.1"
 
 "@types/yargs-parser@*":
   version "20.2.0"
@@ -4224,6 +4240,14 @@ lib0@^0.2.31, lib0@^0.2.41, lib0@^0.2.42:
   dependencies:
     isomorphic.js "^0.2.4"
 
+license-webpack-plugin@^2.3.14:
+  version "2.3.19"
+  resolved "https://registry.yarnpkg.com/license-webpack-plugin/-/license-webpack-plugin-2.3.19.tgz#f02720b2b0bcd9ae27fb63f0bd908d9ac9335d6c"
+  integrity sha512-z/izhwFRYHs1sCrDgrTUsNJpd+Xsd06OcFWSwHz/TiZygm5ucweVZi1Hu14Rf6tOj/XAl1Ebyc7GW6ZyyINyWA==
+  dependencies:
+    "@types/webpack-sources" "^0.1.5"
+    webpack-sources "^1.2.0"
+
 lines-and-columns@^1.1.6:
   version "1.1.6"
   resolved "https://registry.yarnpkg.com/lines-and-columns/-/lines-and-columns-1.1.6.tgz#1c00c743b433cd0a4e80758f7b64a57440d9ff00"
@@ -4453,7 +4477,7 @@ mini-css-extract-plugin@~1.3.2:
     schema-utils "^3.0.0"
     webpack-sources "^1.1.0"
 
-minimatch@^3.0.4:
+minimatch@^3.0.4, minimatch@~3.0.4:
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/minimatch/-/minimatch-3.0.4.tgz#5166e286457f03306064be5497e8dbb0c3d32083"
   integrity sha512-yJHVQEhyqPLUTgt9B83PXu6W3rx4MvvHvSUvToogpwoGDOUQ+yDrR0HRot+yOCdCO7u4hX3pWft6kWBBcqh0UA==
@@ -6111,7 +6135,7 @@ webpack-merge@^5.1.2, webpack-merge@^5.7.3:
     clone-deep "^4.0.1"
     wildcard "^2.0.0"
 
-webpack-sources@^1.1.0, webpack-sources@^1.4.3:
+webpack-sources@^1.1.0, webpack-sources@^1.2.0, webpack-sources@^1.4.3:
   version "1.4.3"
   resolved "https://registry.yarnpkg.com/webpack-sources/-/webpack-sources-1.4.3.tgz#eedd8ec0b928fbf1cbfe994e22d2d890f330a933"
   integrity sha512-lgTS3Xhv1lCOKo7SA5TjKXMjpSM4sBjNV5+q2bqesbSPs5FjGmU6jjtBSkX9b4qW87vDIsCIlUPOEhbZrMdjeQ==
