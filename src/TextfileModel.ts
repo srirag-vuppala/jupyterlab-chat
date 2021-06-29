@@ -1,6 +1,9 @@
 import { DocumentModel } from '@jupyterlab/docregistry';
-import { IModelDB } from '@jupyterlab/observables';
-// import { ISignal, Signal } from '@lumino/signaling';
+import { IModelDB, IObservableString } from '@jupyterlab/observables';
+// import { FileChange, ISharedFile } from '@jupyterlab/shared-models';
+// import { ISignal } from '@lumino/signaling';
+// import { CommentfileModel } from './CommentfileModel';
+import { ISignal, Signal } from '@lumino/signaling';
 
 
 export type TextfileSharedObject = {
@@ -16,17 +19,25 @@ export type TextfilePosition = {
 
 // Figure out a way to do it with extends for ease
 export class TextfileModel extends DocumentModel{
-  constructor(languagePreference?: string, modelDB?: IModelDB) {
-    super(languagePreference, modelDB)
+  constructor(storeObject ?: IObservableString, MySignal ?: ISignal<TextfileModel, void>, languagePreference?: string, modelDB?: IModelDB) {
+    super(languagePreference)
+    // this.contentChanged.connect(storeObject);
+    // this._valueChanged.emit(void 0)
+    // this._valueChanged = this.contentChanged
+    MySignal = this._valueChanged;
+    storeObject = this._storeObject;
   }
-  getSharedModel(): any {
-    return this.sharedModel;
+  protected triggerContentChange(): void {
+    this._valueChanged.emit(void 0);
+    this._storeObject = this.value
+    console.log(this.value)
   }
+  private _valueChanged = new Signal<this, void>(this);
+  private _storeObject: IObservableString | undefined; 
 }
 
 
 // export class TextfileModel implements DocumentRegistry.IModel {
-// export class TextfileModel implements DocumentModel{
 //   constructor(languagePreference?: string, modelDB?: IModelDB) {
 //     this.modelDB = modelDB || new ModelDB();
 //     // Listening for changes on the shared model to propagate them

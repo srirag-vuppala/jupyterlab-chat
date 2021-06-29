@@ -1,17 +1,12 @@
-// import { InputArea } from '@jupyterlab/cells';
-// import { CodeEditor, IEditorMimeTypeService } from '@jupyterlab/codeeditor';
-
 import { InputArea } from '@jupyterlab/cells';
 import {  CodeEditorWrapper } from '@jupyterlab/codeeditor';
-// import { CodeEditor, IEditorMimeTypeService } from '@jupyterlab/codeeditor';
-import { ABCWidgetFactory, DocumentRegistry, TextModelFactory } from '@jupyterlab/docregistry';
+import { ABCWidgetFactory, DocumentRegistry, TextModelFactory, } from '@jupyterlab/docregistry';
 
-import { IModelDB, ModelDB } from '@jupyterlab/observables';
+import { IModelDB, IObservableString, ModelDB } from '@jupyterlab/observables';
 
 import { Contents } from '@jupyterlab/services';
 import { UUID } from '@lumino/coreutils';
-
-// import { UUID } from '@lumino/coreutils';
+import { Signal } from '@lumino/signaling';
 import { CommentfileModel } from './CommentfileModel';
 
 import { TextfileModel } from './TextfileModel';
@@ -20,6 +15,13 @@ import { CommentfileWidget, TextfileWidget } from './widget';
 // import { CommentfilePanel, CommentfileWidget } from './widget';
 
 let GmodelDB = new ModelDB();
+
+// let storeObject = new Signal(this);
+// let storeObject = { 'value' : "" };
+let storeObject : IObservableString;
+// let MySignal = new Signal<ISharedFile, FileChange>(this);
+let MySignal = new Signal<any,any>(this);
+
 
 // export class CommentfileModelFactory
 //   implements DocumentRegistry.IModelFactory<CommentfileModel>
@@ -45,7 +47,7 @@ let GmodelDB = new ModelDB();
 //   }
 //   createNew(languagePreference?: string, modelDB?: IModelDB): CommentfileModel {
 //     // return new CommentfileModel(languagePreference, modelDB);
-//     return new CommentfileModel(languagePreference, GmodelDB);
+//     return new CommentfileModel(languagePreference, modelDB, MySignal);
 //   }
 
 //   private _disposed = false;
@@ -74,7 +76,7 @@ let GmodelDB = new ModelDB();
 //     return '';
 //   }
 //   createNew(languagePreference?: string, modelDB?: IModelDB): TextfileModel {
-//     return new TextfileModel(languagePreference, modelDB);
+//     return new TextfileModel(languagePreference, GmodelDB);
 //   }
 //   private _disposed = false;
 // }
@@ -99,7 +101,10 @@ export class CommentfileModelFactory extends TextModelFactory {
     return '';
   }
   createNew(languagePreference?: string, modelDB?: IModelDB): CommentfileModel{
-    return new CommentfileModel(languagePreference, GmodelDB);
+    return new CommentfileModel(storeObject, MySignal, languagePreference, GmodelDB );
+  }
+  getStoreObject(): any {
+    return storeObject
   }
 }
 
@@ -123,7 +128,8 @@ export class TextfileModelFactory extends TextModelFactory {
     return '';
   }
   createNew(languagePreference?: string, modelDB?: IModelDB): TextfileModel {
-    return new TextfileModel(languagePreference, GmodelDB);
+    console.log(storeObject)
+    return new TextfileModel(storeObject, MySignal, languagePreference, GmodelDB);
   }
 }
 
@@ -173,7 +179,6 @@ export class TextfileWidgetFactory extends ABCWidgetFactory<
       //   mimeTypeService: new CodeMirrorMimeTypeService() 
       // })
       content: new CodeEditorWrapper({
-        // model: new CodeEditor.Model,
         model: context.model,
         uuid: UUID.uuid4(),
         factory: InputArea.defaultContentFactory.editorFactory,

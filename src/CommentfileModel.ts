@@ -1,16 +1,22 @@
 // import { DocumentRegistry } from '@jupyterlab/docregistry';
 
+// import { IChangedArgs } from "@jupyterlab/coreutils";
 import { DocumentModel } from "@jupyterlab/docregistry";
+// import { IBaseCellMetadata } from "@jupyterlab/nbformat";
 
 // import { MapChange, YDocument } from '@jupyterlab/shared-models';
 
 import { IModelDB } from '@jupyterlab/observables';
+// import { CellChange, ISharedBaseCell, ISharedCell } from "@jupyterlab/shared-models";
+// import { Signal } from "@lumino/signaling";
+// import { MapChange, YDocument } from "@jupyterlab/shared-models";
 
 // import { IChangedArgs } from '@jupyterlab/coreutils';
 
 // import { PartialJSONObject } from '@lumino/coreutils';
 
-// import { ISignal, Signal } from '@lumino/signaling';
+import { ISignal } from '@lumino/signaling';
+import { FileChange, ISharedFile } from "@jupyterlab/shared-models";
 
 // import * as Y from 'yjs';
 
@@ -26,10 +32,29 @@ import { IModelDB } from '@jupyterlab/observables';
 // };
 
 export class CommentfileModel extends DocumentModel{
-  constructor(languagePreference?: string, modelDB?: IModelDB) {
-    super(languagePreference, modelDB)
+  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+  constructor(storeObject: any,  MySignal ?: ISignal<ISharedFile, FileChange>, languagePreference?: string, modelDB?: IModelDB) {
+  // constructor(storeObject: any,MySignal: ISignal<CommentfileModel, any>, languagePreference?: string, modelDB?: IModelDB) {
+    super(languagePreference)
+    // MySignal.connect(this._MYonSharedModelChanged);
+    // this._MYsharedModelChanged = this.contentChanged;
+    // storeObject = this.contentChanged;
+    // storeObject = this.sharedModel.changed;
+    // storeObject = this._onSharedModelChanged;
+    
+    // this.stateChanged.connect(this._MYsharedModelChanged)
+    // this.sharedModel.changed = MySignal;
+      // console.log(this.value)
+      console.log(storeObject);
   }
+  // private _MYsharedModelChanged = new Signal<ISharedBaseCell<any>, CellChange<IBaseCellMetadata>>: void: any;
+  // private _MYsharedModelChanged = new Signal<this, IChangedArgs<any>>(this);
+  // private _MYsharedModelChanged = new Signal<this, void>(this);
+ 
 }
+
+
+
 // export class CommentfileModel implements DocumentRegistry.IModel {
 
 //   constructor(languagePreference?: string, modelDB?: IModelDB) {
@@ -208,18 +233,18 @@ export class CommentfileModel extends DocumentModel{
 //   private _sharedModelChanged = new Signal<this, CommentfileChange>(this);
 // }
 
-// /**
-//  * Type representing the changes on the sharedModel.
-//  *
-//  * NOTE: Yjs automatically syncs the documents of the different clients
-//  * and triggers an event to notify that the content changed. You can
-//  * listen to this changes and propagate them to the widget so you don't
-//  * need to update all the data in the widget, you can only update the data
-//  * that changed.
-//  *
-//  * This type represents the different changes that may happen and ready to use
-//  * for the widget.
-//  */
+/**
+ * Type representing the changes on the sharedModel.
+ *
+ * NOTE: Yjs automatically syncs the documents of the different clients
+ * and triggers an event to notify that the content changed. You can
+ * listen to this changes and propagate them to the widget so you don't
+ * need to update all the data in the widget, you can only update the data
+ * that changed.
+ *
+ * This type represents the different changes that may happen and ready to use
+ * for the widget.
+ */
 // export type CommentfileChange = {
 //   contextChange?: MapChange;
 //   contentChange?: string;

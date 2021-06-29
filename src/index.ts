@@ -2,10 +2,6 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
-// import { CodeEditor, Factory, IEditorServices } from '@jupyterlab/codeeditor';
-// import { CodeMirrorEditorFactory } from '@jupyterlab/codemirror';
-// import { DocumentRegistry } from '@jupyterlab/docregistry';
-// import { FileEditor, FileEditorFactory } from '@jupyterlab/fileeditor';
 // import { IWidgetTracker } from '@jupyterlab/apputils';
 // import { Token } from '@lumino/coreutils'
 
@@ -46,7 +42,6 @@ const plugin: JupyterFrontEndPlugin<void> = {
       modelName: 'textfile-model',
       fileTypes: ['text']
     })
-
     app.docRegistry.addWidgetFactory(widgetFactory2);
 
     // widgetFactory.widgetCreated.connect((sender, widget) => {
@@ -59,8 +54,10 @@ const plugin: JupyterFrontEndPlugin<void> = {
     const modelFactory = new CommentfileModelFactory();
     app.docRegistry.addModelFactory(modelFactory);
 
+
     const modelFactory2 = new TextfileModelFactory()
     app.docRegistry.addModelFactory(modelFactory2);
+
 
     console.log("hi");
     app.docRegistry.addFileType({
