@@ -1,22 +1,25 @@
 // import { DocumentRegistry } from '@jupyterlab/docregistry';
 
 // import { IChangedArgs } from "@jupyterlab/coreutils";
-import { DocumentModel } from "@jupyterlab/docregistry";
+import { DocumentRegistry } from "@jupyterlab/docregistry";
 // import { IBaseCellMetadata } from "@jupyterlab/nbformat";
 
 // import { MapChange, YDocument } from '@jupyterlab/shared-models';
 
-import { IModelDB } from '@jupyterlab/observables';
+import { IModelDB, IObservableString } from '@jupyterlab/observables';
 // import { CellChange, ISharedBaseCell, ISharedCell } from "@jupyterlab/shared-models";
-// import { Signal } from "@lumino/signaling";
+import { Signal } from "@lumino/signaling";
 // import { MapChange, YDocument } from "@jupyterlab/shared-models";
 
 // import { IChangedArgs } from '@jupyterlab/coreutils';
 
-// import { PartialJSONObject } from '@lumino/coreutils';
-
 import { ISignal } from '@lumino/signaling';
-import { FileChange, ISharedFile } from "@jupyterlab/shared-models";
+// import { FileChange, ISharedFile } from "@jupyterlab/shared-models";
+import { CodeEditor } from "@jupyterlab/codeeditor";
+import { IChangedArgs } from "@jupyterlab/coreutils";
+import { PartialJSONValue } from "@lumino/coreutils";
+
+import * as models from '@jupyterlab/shared-models';
 
 // import * as Y from 'yjs';
 
@@ -31,25 +34,103 @@ import { FileChange, ISharedFile } from "@jupyterlab/shared-models";
 //   y: number;
 // };
 
-export class CommentfileModel extends DocumentModel{
-  // eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
-  constructor(storeObject: any,  MySignal ?: ISignal<ISharedFile, FileChange>, languagePreference?: string, modelDB?: IModelDB) {
+export class CommentfileModel extends CodeEditor.Model implements DocumentRegistry.ICodeModel {
+  constructor(Myfilemodel: models.ISharedText ,storeObject: IObservableString,  MySignal : ISignal<any, any>, languagePreference?: string, modelDB?: IModelDB) {
   // constructor(storeObject: any,MySignal: ISignal<CommentfileModel, any>, languagePreference?: string, modelDB?: IModelDB) {
-    super(languagePreference)
-    // MySignal.connect(this._MYonSharedModelChanged);
-    // this._MYsharedModelChanged = this.contentChanged;
-    // storeObject = this.contentChanged;
-    // storeObject = this.sharedModel.changed;
-    // storeObject = this._onSharedModelChanged;
+    super({ modelDB })
+    this._defaultLang = languagePreference || '';
+    const filemodel = new models.YFile() as models.ISharedFile;
+    this.switchSharedModel(filemodel, true);
+    // this.value.changed.connect(this.triggerContentChange, this);
+    // MySignal.connect(this.triggerContentChange );
+    this._storeObject = storeObject
     
-    // this.stateChanged.connect(this._MYsharedModelChanged)
-    // this.sharedModel.changed = MySignal;
-      // console.log(this.value)
-      console.log(storeObject);
+
+    
+    console.log(this._storeObject)
+    console.log(Myfilemodel)
   }
-  // private _MYsharedModelChanged = new Signal<ISharedBaseCell<any>, CellChange<IBaseCellMetadata>>: void: any;
-  // private _MYsharedModelChanged = new Signal<this, IChangedArgs<any>>(this);
-  // private _MYsharedModelChanged = new Signal<this, void>(this);
+ 
+  get contentChanged(): ISignal<this, void> {
+    return this._contentChanged;
+  }
+
+  get stateChanged(): ISignal<this, IChangedArgs<any>> {
+    return this._stateChanged;
+  }
+
+  get dirty(): boolean {
+    return this._dirty;
+  }
+  set dirty(newValue: boolean) {
+    if (newValue === this._dirty) {
+      return;
+    }
+    const oldValue = this._dirty;
+    this._dirty = newValue;
+    this.triggerStateChange({ name: 'dirty', oldValue, newValue });
+  }
+
+  get readOnly(): boolean {
+    return this._readOnly;
+  }
+  set readOnly(newValue: boolean) {
+    if (newValue === this._readOnly) {
+      return;
+    }
+    const oldValue = this._readOnly;
+
+    this._readOnly = newValue;
+    this.triggerStateChange({ name: 'readOnly', oldValue, newValue });
+  }
+
+  get defaultKernelName(): string {
+    return '';
+  }
+  get defaultKernelLanguage(): string {
+    return this._defaultLang;
+  }
+
+  toString(): string {
+    return this.value.text;
+  }
+
+  fromString(value: string): void {
+    this.value.text = value;
+  }
+
+  toJSON(): PartialJSONValue {
+    return JSON.parse(this.value.text || 'null');
+  }
+  fromJSON(value: PartialJSONValue): void {
+    this.fromString(JSON.stringify(value));
+  }
+
+  initialize(): void {
+    return;
+  }
+
+  protected triggerStateChange(args: IChangedArgs<any>): void {
+    this._stateChanged.emit(args);
+  }
+
+  protected triggerContentChange(): void {
+    this._contentChanged.emit(void 0);
+    this.dirty = true;
+    console.log(this.value)
+  }
+
+  readonly sharedModel: any;
+  private _defaultLang = '';
+  private _dirty = false;
+  private _readOnly = false;
+  private _contentChanged = new Signal<this, void>(this);
+  private _stateChanged = new Signal<this, IChangedArgs<any>>(this);
+
+  // private _valueChanged = new Signal<this, void>(this);
+  private _storeObject: IObservableString | undefined; 
+
+;
  
 }
 

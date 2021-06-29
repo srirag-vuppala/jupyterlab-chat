@@ -2,6 +2,8 @@ import {
   JupyterFrontEnd,
   JupyterFrontEndPlugin
 } from '@jupyterlab/application';
+import { InputDialog } from '@jupyterlab/apputils';
+
 // import { IWidgetTracker } from '@jupyterlab/apputils';
 // import { Token } from '@lumino/coreutils'
 
@@ -21,6 +23,11 @@ import { CommentfileModelFactory, CommentfileWidgetFactory, TextfileModelFactory
 /**
  * Initialization data for the jupyterlab-chat extension.
  */
+namespace CommandIDs {
+  export const addComment = 'jl-chat:add-comment';
+  export const renderComment = 'jl-chat:render-comment';
+}
+
 const plugin: JupyterFrontEndPlugin<void> = {
   id: 'jupyterlab-chat:plugin',
   autoStart: true,
@@ -43,6 +50,30 @@ const plugin: JupyterFrontEndPlugin<void> = {
       fileTypes: ['text']
     })
     app.docRegistry.addWidgetFactory(widgetFactory2);
+
+    app.commands.addCommand(CommandIDs.addComment, {
+      label: 'Add Comment',
+      execute: () => {
+        // const cell = nbTracker.currentWidget?.content.activeCell;
+        // if (cell == null) {
+          // return;
+        // }
+
+        void InputDialog.getText({
+          title: 'Enter Comment'
+        }).then(value => {
+          if (value.value != null) {
+            // const comment: IComment = {
+            //   id: UUID.uuid4(),
+            //   type: 'cell',
+            //   author: 'Bob',
+            //   replies: [],
+            //   text: value.value
+            // };
+          }
+        });
+      }
+    });
 
     // widgetFactory.widgetCreated.connect((sender, widget) => {
     //   widget.context.pathChanged.connect(() => {

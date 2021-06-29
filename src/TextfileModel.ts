@@ -1,33 +1,39 @@
 import { DocumentModel } from '@jupyterlab/docregistry';
 import { IModelDB, IObservableString } from '@jupyterlab/observables';
+import { ISharedText } from '@jupyterlab/shared-models';
 // import { FileChange, ISharedFile } from '@jupyterlab/shared-models';
 // import { ISignal } from '@lumino/signaling';
 // import { CommentfileModel } from './CommentfileModel';
 import { ISignal, Signal } from '@lumino/signaling';
 
 
-export type TextfileSharedObject = {
-  x: number;
-  y: number;
-  content: string;
-};
+// export type TextfileSharedObject = {
+//   x: number;
+//   y: number;
+//   content: string;
+// };
 
-export type TextfilePosition = {
-  x: number;
-  y: number;
-};
+// export type TextfilePosition = {
+//   x: number;
+//   y: number;
+// };
 
-// Figure out a way to do it with extends for ease
+// work on making a menu to comment and send it to commentfilemodel.
+
 export class TextfileModel extends DocumentModel{
-  constructor(storeObject ?: IObservableString, MySignal ?: ISignal<TextfileModel, void>, languagePreference?: string, modelDB?: IModelDB) {
-    super(languagePreference)
+  constructor(Myfilemodel: ISharedText, storeObject ?: IObservableString, MySignal ?: ISignal<any, any>, languagePreference?: string, modelDB?: IModelDB) {
+    super(languagePreference, modelDB)
     // this.contentChanged.connect(storeObject);
     // this._valueChanged.emit(void 0)
     // this._valueChanged = this.contentChanged
-    MySignal = this._valueChanged;
+    this.switchSharedModel(Myfilemodel)
+    MySignal = this._valueChanged
+    // MySignal = this.value.changed;
+    // MySignal?.connect(this.triggerContentChange, this)
     storeObject = this._storeObject;
   }
-  protected triggerContentChange(): void {
+
+  public triggerContentChange(): void {
     this._valueChanged.emit(void 0);
     this._storeObject = this.value
     console.log(this.value)

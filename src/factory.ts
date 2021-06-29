@@ -2,7 +2,7 @@ import { InputArea } from '@jupyterlab/cells';
 import {  CodeEditorWrapper } from '@jupyterlab/codeeditor';
 import { ABCWidgetFactory, DocumentRegistry, TextModelFactory, } from '@jupyterlab/docregistry';
 
-import { IModelDB, IObservableString, ModelDB } from '@jupyterlab/observables';
+import { IModelDB, IObservableString } from '@jupyterlab/observables';
 
 import { Contents } from '@jupyterlab/services';
 import { UUID } from '@lumino/coreutils';
@@ -13,14 +13,17 @@ import { TextfileModel } from './TextfileModel';
 
 import { CommentfileWidget, TextfileWidget } from './widget';
 // import { CommentfilePanel, CommentfileWidget } from './widget';
+import * as models from '@jupyterlab/shared-models';
 
-let GmodelDB = new ModelDB();
+// let GmodelDB = new ModelDB();
 
 // let storeObject = new Signal(this);
 // let storeObject = { 'value' : "" };
 let storeObject : IObservableString;
 // let MySignal = new Signal<ISharedFile, FileChange>(this);
 let MySignal = new Signal<any,any>(this);
+
+const Myfilemodel = new models.YFile() as models.ISharedFile;
 
 
 // export class CommentfileModelFactory
@@ -101,7 +104,7 @@ export class CommentfileModelFactory extends TextModelFactory {
     return '';
   }
   createNew(languagePreference?: string, modelDB?: IModelDB): CommentfileModel{
-    return new CommentfileModel(storeObject, MySignal, languagePreference, GmodelDB );
+    return new CommentfileModel(Myfilemodel,storeObject, MySignal, languagePreference, modelDB);
   }
   getStoreObject(): any {
     return storeObject
@@ -129,7 +132,7 @@ export class TextfileModelFactory extends TextModelFactory {
   }
   createNew(languagePreference?: string, modelDB?: IModelDB): TextfileModel {
     console.log(storeObject)
-    return new TextfileModel(storeObject, MySignal, languagePreference, GmodelDB);
+    return new TextfileModel(Myfilemodel, storeObject, MySignal, languagePreference, modelDB);
   }
 }
 
@@ -149,6 +152,12 @@ export class CommentfileWidgetFactory extends ABCWidgetFactory<
         model: context.model,
         uuid: UUID.uuid4(),
         factory: InputArea.defaultContentFactory.editorFactory,
+        updateOnShow: true,
+        config: {
+          autoClosingBrackets: true,
+          codeFolding: true,
+          // lineNumbers: true
+        }
       })
     });
   }
@@ -182,6 +191,7 @@ export class TextfileWidgetFactory extends ABCWidgetFactory<
         model: context.model,
         uuid: UUID.uuid4(),
         factory: InputArea.defaultContentFactory.editorFactory,
+        updateOnShow: true
       })
     });
   }

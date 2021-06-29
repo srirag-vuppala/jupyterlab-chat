@@ -41,6 +41,7 @@ export class TextfileWidget extends DocumentWidget<CodeEditorWrapper, TextfileMo
   constructor(options: DocumentWidget.IOptions<CodeEditorWrapper, TextfileModel>) {
     super(options);
     this.addClass('textpanel-style')
+    
   }
   /**
    * Dispose of the resources held by the widget.
