@@ -55,7 +55,13 @@ const plugin: JupyterFrontEndPlugin<void> = {
 
     panel.revealed.connect(() => panel.update());
 
+    panel.commentAdded.connect(() => panel.update());
+
     shell.currentChanged.connect(() => panel.update());
+
+    nbTracker.activeCell?.model.contentChanged.connect(() => panel.update())
+    
+   
 
     const onActiveCellChanged = (_: any, cell: Cell | null): void => {
       if (cell == null) {
