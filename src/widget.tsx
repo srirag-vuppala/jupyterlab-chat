@@ -1,7 +1,15 @@
 import { ReactWidget, UseSignal } from '@jupyterlab/apputils';
 import * as React from 'react';
 import { ellipsesIcon } from '@jupyterlab/ui-components';
-import { IComment, IIdentity, IReply } from './commentformat';
+import {
+  Emoticon,
+  emoticonList,
+  getEmoticonByID,
+  IComment,
+  IEmoticon,
+  IIdentity,
+  IReply
+} from './commentformat';
 import { getIdentity } from './utils';
 import { Menu, Panel } from '@lumino/widgets';
 import { ISignal, Signal } from '@lumino/signaling';
@@ -10,7 +18,6 @@ import { CommentFileModel } from './model';
 import { Context } from '@jupyterlab/docregistry';
 import { Message } from '@lumino/messaging';
 import { PartialJSONValue } from '@lumino/coreutils';
-
 
 /**
  * This type comes from @jupyterlab/apputils/vdom.ts but isn't exported.
@@ -46,6 +53,7 @@ type CommentWrapperProps = {
 type ReplyAreaProps = {
   hidden: boolean;
   className?: string;
+  comment: IComment;
 };
 
 type PreviewProps = {
@@ -59,6 +67,59 @@ type ReplyProps = {
   className?: string;
   editable?: boolean;
 };
+
+type EmoticonReactionProps = {
+  id: string;
+};
+
+function EmoticonReaction(props: EmoticonReactionProps): JSX.Element {
+  const [open, isOpen] = React.useState(false);
+  return (
+    <div className="jc-EmoticonReactionWrapper">
+      {/* <Jdiv jcEventArea="" id={id}></Jdiv> */}
+      {!open && (
+        <div onClick={() => isOpen(open => !open)}>
+          {emoticonList[0].emoticon}
+        </div>
+      )}
+      {open && (
+        <div className="jc-EmoticonReactionOpenWrapper">
+          <Jdiv className="jc-EmoticonReactionList">
+            {emoticonList.slice(1).map(value => {
+              return (
+                <Jdiv key={value.id} id={value.id} jcEventArea="emoticon">
+                  {value.emoticon}
+                </Jdiv>
+              );
+            })}
+          </Jdiv>
+          <div onClick={() => isOpen(open => !open)}>
+            {emoticonList[0].emoticon}
+          </div>
+        </div>
+      )}
+
+      {/* {!open && (
+        <div onClick={() => isOpen(open => !open)}>
+          {emoticonDict.Smile.emoticon}
+        </div>
+      )} */}
+      {/* {open && (
+        <div className="jc-EmoticonReactionOpenWrapper">
+          <Jdiv className="jc-EmoticonReactionList" >
+            <Jdiv id={emoticonDict.ThinkingFace.id} jcEventArea="emoticon">{emoticonDict.ThinkingFace.emoticon}</Jdiv>
+            <Jdiv id={emoticonDict.ThumbsDown.id}jcEventArea="emoticon">{emoticonDict.ThumbsDown.emoticon}</Jdiv>
+            <Jdiv id={emoticonDict.ThumbsUp.id}jcEventArea="emoticon">{emoticonDict.ThumbsUp.emoticon}</Jdiv>
+            <Jdiv id={emoticonDict.Eyes.id}jcEventArea="emoticon">{emoticonDict.Eyes.emoticon}</Jdiv>
+          </Jdiv>
+          <div onClick={() => isOpen(open => !open)}>
+            {emoticonDict.Smile.emoticon}
+          </div>
+        </div>
+      )} */}
+    </div>
+  );
+}
 
 function Jdiv(props: any): JSX.Element {
   return <div {...props}>{props.children}</div>;
@@ -133,6 +194,12 @@ function JCComment(props: CommentProps): JSX.Element {
       >
         {comment.text}
       </Jdiv>
+
+      <div>
+        {comment.emoticons.map(value => {
+          return <div key={value.emoticon.id}>{value.emoticon.emoticon}</div>;
+        })}
+      </div>
     </Jdiv>
   );
 }
@@ -174,6 +241,11 @@ function JCReply(props: ReplyProps): JSX.Element {
       >
         {reply.text}
       </Jdiv>
+      <div>
+        {reply.emoticons.map(value => {
+          return <div key={value.emoticon.id}>{value.emoticon.emoticon}</div>;
+        })}
+      </div>
     </Jdiv>
   );
 }
@@ -188,9 +260,9 @@ function JCCommentWithReplies(props: CommentWithRepliesProps): JSX.Element {
   const collapseNeeded = props.collapseNeeded;
 
   let RepliesComponent = (): JSX.Element => {
-    collapseNeeded.connect((_, args)=> {
-        SetOpen(args);
-    })
+    collapseNeeded.connect((_, args) => {
+      SetOpen(args);
+    });
 
     if (open === true || comment.replies.length < 4) {
       return (
@@ -225,7 +297,6 @@ function JCCommentWithReplies(props: CommentWithRepliesProps): JSX.Element {
         </div>
       );
     }
-
   };
 
   React.useEffect(() => {
@@ -237,8 +308,7 @@ function JCCommentWithReplies(props: CommentWithRepliesProps): JSX.Element {
   };
 
   return (
-    // <Jdiv className={'jc-CommentWithReplies ' + className} onFocus={() => document.execCommand('selectAll', false, undefined)}>
-    <Jdiv className={'jc-CommentWithReplies ' + className}> 
+    <Jdiv className={'jc-CommentWithReplies ' + className}>
       <JCComment
         comment={comment}
         editable={editID === comment.id}
@@ -253,16 +323,23 @@ function JCCommentWithReplies(props: CommentWithRepliesProps): JSX.Element {
 function JCReplyArea(props: ReplyAreaProps): JSX.Element {
   const hidden = props.hidden;
   const className = props.className || '';
+  const comment = props.comment;
 
   return (
-    <Jdiv
-      className={'jc-ReplyInputArea ' + className}
-      contentEditable={true}
-      hidden={hidden}
-      jcEventArea="reply"
-      onFocus={() => document.execCommand('selectAll', false, undefined)}
-      data-placeholder="reply"
-    />
+    <div>
+      <Jdiv hidden={hidden}>
+        <Jdiv className="jc-ReplyInputAreaWrapper">
+          <EmoticonReaction id={comment.id} />
+          <Jdiv
+            className={'jc-ReplyInputArea ' + className}
+            contentEditable={true}
+            jcEventArea="reply"
+            onFocus={() => document.execCommand('selectAll', false, undefined)}
+            data-placeholder="reply"
+          />
+        </Jdiv>
+      </Jdiv>
+    </div>
   );
 }
 
@@ -281,9 +358,12 @@ function JCCommentWrapper(props: CommentWrapperProps): JSX.Element {
         activeID={commentWidget.activeID}
         target={commentWidget.target}
         factory={commentWidget.factory}
-        collapseNeeded = {collapseNeeded}
+        collapseNeeded={collapseNeeded}
       />
-      <JCReplyArea hidden={commentWidget.replyAreaHidden} />
+      <JCReplyArea
+        hidden={commentWidget.replyAreaHidden}
+        comment={commentWidget.comment!}
+      />
     </div>
   );
 }
@@ -368,6 +448,9 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
       case 'user':
         this._handleUserClick(event);
         break;
+      case 'emoticon':
+        this._handleEmoticonClick(event);
+        break;
       case 'other':
         this._handleOtherClick(event);
         break;
@@ -379,6 +462,52 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
     }
   }
 
+  private _handleEmoticonClick(event: React.MouseEvent) {
+    this._setClickFocus(event);
+    const target = event.target as HTMLDivElement;
+    console.log(target.id);
+    // console.log((this.model.toJSON() as PartialJSONObject)['emoticons'])
+    console.log(this.model.toString());
+    const temp: Emoticon = getEmoticonByID(target.id);
+    console.log(temp);
+    if (temp === undefined) {
+      console.warn('Did not recieve a emoticon with the id');
+      return;
+    }
+
+    let oldEmoticonList = this.model.getComment(this.activeID)?.comment
+      .emoticons;
+    if (oldEmoticonList == undefined) {
+      oldEmoticonList = this.model.getReply(this.activeID)!.reply.emoticons;
+    }
+
+    // let oldEmoticonList: IEmoticon[] = this.model.getComment(this.activeID)!.comment.emoticons
+
+    let newEmoticon: IEmoticon = {
+      emoticon: temp,
+      user: this.identity!
+    };
+
+    oldEmoticonList.push(newEmoticon);
+    console.log('New emoticon list', oldEmoticonList);
+
+    try {
+      this.model.editComment(
+        {
+          emoticons: oldEmoticonList
+        },
+        this.activeID
+      );
+    } catch {
+      this.model.editReply(
+        {
+          emoticons: oldEmoticonList
+        },
+        this.activeID
+      );
+    }
+  }
+
   private _handleBlur(event: React.MouseEvent): void {
     const relatedTarget = event.relatedTarget;
     event.preventDefault();
@@ -387,7 +516,8 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
       this.collapseNeeded.emit(false);
     } else if (
       !this.node.contains(relatedTarget as HTMLElement) ||
-      !(this.node === relatedTarget)){
+      !(this.node === relatedTarget)
+    ) {
       this.collapseNeeded.emit(false);
     }
   }
@@ -410,9 +540,6 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
       this.node.focus();
     }
   }
-
-
-
 
   /**
    * Handle a click on the dropdown (ellipses) area of a widget.
@@ -557,7 +684,12 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
   render(): ReactRenderElement {
     return (
       <UseSignal signal={this.renderNeeded}>
-        {() => <JCCommentWrapper commentWidget={this} collapseNeeded={this._collapseNeeded}/>}
+        {() => (
+          <JCCommentWrapper
+            commentWidget={this}
+            collapseNeeded={this._collapseNeeded}
+          />
+        )}
       </UseSignal>
     );
   }
@@ -746,7 +878,7 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
   private _renderNeeded: Signal<this, undefined> = new Signal<this, undefined>(
     this
   );
-  private _collapseNeeded: Signal<this,boolean > = new Signal<this, boolean>(
+  private _collapseNeeded: Signal<this, boolean> = new Signal<this, boolean>(
     this
   );
 }
@@ -770,6 +902,7 @@ export namespace CommentWidget {
     | 'user'
     | 'reply'
     | 'other'
+    | 'emoticon'
     | 'blur'
     | 'none';
 
@@ -783,6 +916,7 @@ export namespace CommentWidget {
       'user',
       'reply',
       'other',
+      'emoticon',
       'none',
       'blur'
     ].includes(input);

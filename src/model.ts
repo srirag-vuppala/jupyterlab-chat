@@ -1,4 +1,4 @@
-import { IComment, IIdentity, IReply } from './commentformat';
+import { IComment, IEmoticon, IIdentity, IReply } from './commentformat';
 import { ACommentFactory } from './factory';
 import { ICommentRegistry } from './registry';
 import { ISharedDocument, YDocument } from '@jupyterlab/shared-models';
@@ -527,6 +527,7 @@ export interface ICommentOptionsBase {
   identity: IIdentity;
   type: string;
   replies?: IReply[];
+  emoticons?: IEmoticon[];
   id?: string; // defaults to UUID.uuid4();
 }
 
@@ -539,5 +540,6 @@ export type ICommentOptions = ({ target: PartialJSONValue } | { source: any }) &
 export interface IReplyOptions {
   text: string;
   identity: IIdentity;
+  emoticons?: IEmoticon[];
   id?: string; // defaults to UUID.uuid4()
 }

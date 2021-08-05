@@ -189,11 +189,16 @@
   color: var(--jp-ui-font-color3);
 }
 .jc-ReplyInputArea {
+  /* min-height: 30px; */
+  word-break: break-word;
+}
+
+.jc-ReplyInputAreaWrapper {
   border: var(--jc-comment-border);
   border-top: none;
   padding: 10px;
-  /* min-height: 30px; */
-  word-break: break-word;
+  display: flex;
+  gap: 10px
 }
 
 .jc-Highlight {
@@ -304,4 +309,29 @@
 .jc-IconShadow {
   filter: drop-shadow(0px 2px 1px var(--jp-shadow-umbra-color));
   cursor: pointer;
+}
+
+.jc-EmoticonReactionWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.jc-EmoticonReactionOpenWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.jc-EmoticonReactionList {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.jc-EmoticonReactionList > div{
+  padding: 5px;
+  border-radius: 40%;
+  border: var(--jc-comment-border)
 }

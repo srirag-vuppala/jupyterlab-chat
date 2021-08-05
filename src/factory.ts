@@ -1,6 +1,7 @@
 import {
   ICellSelectionComment,
   IComment,
+  IEmoticon,
   IIdentity,
   IReply,
   ISelection
@@ -43,25 +44,27 @@ export abstract class ACommentFactory<T = any> {
     options: ACommentFactory.ICommentOptions<T>,
     target?: PartialJSONValue
   ): IComment {
-    const { text, identity, replies, id } = options;
+    const { text, identity, replies, emoticons, id } = options;
     return {
       text,
       identity,
       type: this.type,
       id: id ?? UUID.uuid4(),
       replies: replies ?? [],
+      emoticons: emoticons ?? [],
       time: getCommentTimeString(),
       target: target ?? this.targetToJSON(options.source!)
     };
   }
 
   static createReply(options: ACommentFactory.IReplyOptions): IReply {
-    const { text, identity, id } = options;
+    const { text, identity, emoticons, id } = options;
 
     return {
       text,
       identity,
       id: id ?? UUID.uuid4(),
+      emoticons: emoticons ?? [],
       time: getCommentTimeString(),
       type: 'reply'
     };
@@ -274,12 +277,14 @@ export namespace HTMLElementCommentFactory {
 export namespace ACommentFactory {
   export interface IOptions {
     type: string; // cell or cell-selection
+
   }
 
   export interface IReplyOptions {
     text: string;
     identity: IIdentity;
     id?: string;
+    emoticons?: IEmoticon[];
   }
 
   export interface ICommentOptions<T> extends IReplyOptions {
