@@ -72,11 +72,44 @@ type EmoticonReactionProps = {
   id: string;
 };
 
+type RenderEmoticonsProps = {
+  comment: IComment;
+};
+
+function RenderEmoticons(props: RenderEmoticonsProps): JSX.Element {
+  const { comment } = props;
+
+  let emoticonDict = new Map<Emoticon, IIdentity[]>();
+
+  for(let i = 0; i< comment.emoticons.length; i++){
+    if (emoticonDict.has(comment.emoticons[i].emoticon)){
+      let new_arr = emoticonDict.get(comment.emoticons[i].emoticon)!
+      new_arr.push(comment.emoticons[i].user)
+      emoticonDict.set(comment.emoticons[i].emoticon, new_arr)
+    }
+    else {
+      emoticonDict.set(comment.emoticons[i].emoticon, [comment.emoticons[i].user] )
+    }
+  }
+
+  let sub = ():JSX.Element => {
+    emoticonDict.forEach((value, key) => <div key={key.id}>{key.emoticon}|{value.length}</div>)
+  }
+
+  return (
+    <div className="jc-RenderEmoticonsWrapper">
+        {/* // emoticonDict.forEach((key, value) => <div key={key}>{value.emoticon}</div>) */}
+      {
+        emoticonDict.forEach((value, key) => <div key={key.id}>{key.emoticon}|{value.length}</div>)
+      }
+    </div>
+  );
+}
+
 function EmoticonReaction(props: EmoticonReactionProps): JSX.Element {
   const [open, isOpen] = React.useState(false);
   return (
     <div className="jc-EmoticonReactionWrapper">
-      {/* <Jdiv jcEventArea="" id={id}></Jdiv> */}
       {!open && (
         <div onClick={() => isOpen(open => !open)}>
           {emoticonList[0].emoticon}
@@ -98,25 +131,6 @@ function EmoticonReaction(props: EmoticonReactionProps): JSX.Element {
           </div>
         </div>
       )}
-
-      {/* {!open && (
-        <div onClick={() => isOpen(open => !open)}>
-          {emoticonDict.Smile.emoticon}
-        </div>
-      )} */}
-      {/* {open && (
-        <div className="jc-EmoticonReactionOpenWrapper">
-          <Jdiv className="jc-EmoticonReactionList" >
-            <Jdiv id={emoticonDict.ThinkingFace.id} jcEventArea="emoticon">{emoticonDict.ThinkingFace.emoticon}</Jdiv>
-            <Jdiv id={emoticonDict.ThumbsDown.id}jcEventArea="emoticon">{emoticonDict.ThumbsDown.emoticon}</Jdiv>
-            <Jdiv id={emoticonDict.ThumbsUp.id}jcEventArea="emoticon">{emoticonDict.ThumbsUp.emoticon}</Jdiv>
-            <Jdiv id={emoticonDict.Eyes.id}jcEventArea="emoticon">{emoticonDict.Eyes.emoticon}</Jdiv>
-          </Jdiv>
-          <div onClick={() => isOpen(open => !open)}>
-            {emoticonDict.Smile.emoticon}
-          </div>
-        </div>
-      )} */}
     </div>
   );
 }
@@ -194,12 +208,7 @@ function JCComment(props: CommentProps): JSX.Element {
       >
         {comment.text}
       </Jdiv>
-
-      <div>
-        {comment.emoticons.map(value => {
-          return <div key={value.emoticon.id}>{value.emoticon.emoticon}</div>;
-        })}
-      </div>
+      <RenderEmoticons comment={comment} />
     </Jdiv>
   );
 }
@@ -241,11 +250,6 @@ function JCReply(props: ReplyProps): JSX.Element {
       >
         {reply.text}
       </Jdiv>
-      <div>
-        {reply.emoticons.map(value => {
-          return <div key={value.emoticon.id}>{value.emoticon.emoticon}</div>;
-        })}
-      </div>
     </Jdiv>
   );
 }
@@ -454,7 +458,6 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
       case 'other':
         this._handleOtherClick(event);
         break;
-
       case 'none':
         break;
       default:
@@ -465,47 +468,26 @@ export class CommentWidget<T> extends ReactWidget implements ICommentWidget<T> {
   private _handleEmoticonClick(event: React.MouseEvent) {
     this._setClickFocus(event);
     const target = event.target as HTMLDivElement;
-    console.log(target.id);
-    // console.log((this.model.toJSON() as PartialJSONObject)['emoticons'])
     console.log(this.model.toString());
+
     const temp: Emoticon = getEmoticonByID(target.id);
-    console.log(temp);
-    if (temp === undefined) {
-      console.warn('Did not recieve a emoticon with the id');
-      return;
-    }
 
-    let oldEmoticonList = this.model.getComment(this.activeID)?.comment
-      .emoticons;
-    if (oldEmoticonList == undefined) {
-      oldEmoticonList = this.model.getReply(this.activeID)!.reply.emoticons;
-    }
-
-    // let oldEmoticonList: IEmoticon[] = this.model.getComment(this.activeID)!.comment.emoticons
+    let EmoticonList: IEmoticon[] = this.model.getComment(this.commentID)!
+      .comment.emoticons;
 
     let newEmoticon: IEmoticon = {
       emoticon: temp,
       user: this.identity!
     };
 
-    oldEmoticonList.push(newEmoticon);
-    console.log('New emoticon list', oldEmoticonList);
+    EmoticonList.push(newEmoticon);
 
-    try {
-      this.model.editComment(
-        {
-          emoticons: oldEmoticonList
-        },
-        this.activeID
-      );
-    } catch {
-      this.model.editReply(
-        {
-          emoticons: oldEmoticonList
-        },
-        this.activeID
-      );
-    }
+    this.model.editComment(
+      {
+        emoticons: EmoticonList
+      },
+      this.activeID
+    );
   }
 
   private _handleBlur(event: React.MouseEvent): void {

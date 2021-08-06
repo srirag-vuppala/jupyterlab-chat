@@ -335,3 +335,16 @@
   border-radius: 40%;
   border: var(--jc-comment-border)
 }
+
+.jc-RenderEmoticonsWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.jc-RenderEmoticonsWrapper > div {
+  padding: 5px;
+  border-radius: 40%;
+  border: var(--jc-comment-border)
+}

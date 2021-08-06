@@ -58,7 +58,7 @@ export const emoticonList = [
     emoticon: '🤔',
     id: 'U+1F914'
   }
-]
+];
 
 // export const emoticonDict = {
 //   Smile: {
@@ -84,22 +84,20 @@ export const emoticonList = [
 // };
 
 export type Emoticon = {
-  emoticon: '😀' | '👍' | '👎' | '👀' |'🤔' 
-  id: string
-}
+  emoticon: '😀' | '👍' | '👎' | '👀' | '🤔';
+  id: string;
+};
 
-export function getEmoticonByID(id: string): Emoticon{
-  let emoticon : Emoticon;
-  emoticonList.map((emoji) => {
-    if (emoji['id'] == id) {
-      emoticon = emoji as Emoticon;
-      console.log(emoticon)
-      return emoticon
+export function getEmoticonByID(id: string): Emoticon {
+  let emoticon: Emoticon;
+  for (let i=0; i< emoticonList.length; i++){
+    if (emoticonList[i]["id"] === id) {
+      emoticon = emoticonList[i] as Emoticon;
+      return emoticon;
     }
-  });
-
-  emoticon = emoticonList[0] as Emoticon
-  return emoticon
+  }
+  emoticon = emoticonList[0] as Emoticon;
+  return emoticon;
 }
 
 // type Emoticon = Smile | ThumbsDown | ThinkingFace | ThumbsUp | Eyes;
