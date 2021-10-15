@@ -347,6 +347,10 @@ export class CommentPanel extends Panel implements ICommentPanel {
       return;
     }
 
+    // this._modelChanged.connect((_, args)=> {
+
+    // })
+
     const comment = commentFactory.createComment({ ...options, text: '' });
 
     const widgetFactory = this.commentWidgetRegistry.getFactory(options.type);
